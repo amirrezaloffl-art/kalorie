@@ -39,6 +39,7 @@ export function App() {
 
   return (
     <>
+      <div className="app-bg fixed inset-0 -z-10" aria-hidden />
       <div className="mx-auto min-h-dvh w-full max-w-xl lg:max-w-6xl">
         <div className={cx(pages.length > 0 && 'hidden lg:block')}>
           {tab === 'home' && <Home />}
@@ -87,22 +88,22 @@ function BottomNav() {
         setTab(id);
         window.scrollTo({ top: 0 });
       }}
-      className={cx('flex flex-1 flex-col items-center gap-0.5 py-1 text-[11px] font-medium transition', tab === id ? 'text-ink' : 'text-ink3')}
+      className={cx('flex flex-1 flex-col items-center gap-0.5 rounded-full border py-1.5 text-[10px] font-medium transition', tab === id ? 'glass-pill text-accent' : 'border-transparent text-ink2')}
     >
       <Icon size={22} strokeWidth={tab === id ? 2.2 : 1.7} />
       {label}
     </button>
   );
   return (
-    <nav className="pb-safe fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/90 backdrop-blur">
-      <div className="mx-auto flex max-w-xl items-center px-2 pt-2">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-20 px-3 pb-[max(env(safe-area-inset-bottom),12px)]">
+      <div className="glass-strong pointer-events-auto mx-auto flex max-w-md items-center gap-1 rounded-full p-1.5">
         {item('home', HomeIcon, t('nav.home'))}
         {item('meals', UtensilsCrossed, t('nav.meals'))}
         <div className="flex flex-1 justify-center">
           <button
             aria-label={t('nav.add')}
             onClick={() => openSheet('quickAdd')}
-            className="-mt-6 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-onPrimary shadow-card transition active:scale-95"
+            className="glass-tint flex h-12 w-12 items-center justify-center rounded-full transition active:scale-95"
           >
             <Plus size={28} />
           </button>
@@ -139,7 +140,7 @@ function QuickAddSheet() {
     <Sheet open={sheet === 'quickAdd'} onClose={close} title={t('quick.title')}>
       <div className="grid grid-cols-2 gap-3 pb-2">
         {items.map((it) => (
-          <button key={it.label} onClick={it.go} className="flex flex-col items-start gap-3 rounded-md border border-line bg-surface2 p-4 text-start active:scale-[0.98]">
+          <button key={it.label} onClick={it.go} className="glass flex flex-col items-start gap-3 rounded-[26px] p-4 text-start active:scale-[0.98]">
             <span className="flex h-10 w-10 items-center justify-center rounded-full" style={{ background: it.color, color: 'white' }}>
               <it.icon size={20} />
             </span>

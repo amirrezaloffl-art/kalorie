@@ -167,7 +167,7 @@ export function RecipeBuilder({ page }: { page: Extract<PageT, { kind: 'recipe' 
           <div><b className="text-carbs">{n(calc.per100.carbs, 1)}</b><div className="text-[11px] text-ink3">{t('macro.cShort')}</div></div>
           <div><b className="text-fat">{n(calc.per100.fat, 1)}</b><div className="text-[11px] text-ink3">{t('macro.fShort')}</div></div>
         </div>
-        <div className="mt-3 border-t border-line pt-2 text-xs text-ink2">
+        <div className="mt-3 border-t border-ink/10 pt-2 text-xs text-ink2">
           {t('recipe.total', { kcal: n(calc.total.kcal), g: n(calc.weight) })}
           {servings ? ` • ${t('recipe.perServing', { kcal: n(calc.total.kcal / servings) })}` : ''}
         </div>

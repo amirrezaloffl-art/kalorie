@@ -98,7 +98,7 @@ export function CustomFood({ page }: { page: Extract<PageT, { kind: 'customFood'
           {imageId && imageUrls[imageId] ? (
             <FoodThumb food={{ id: 'x', category, imageId }} size={72} />
           ) : (
-            <div className="flex h-[72px] w-[72px] flex-col items-center justify-center gap-1 rounded-md border-2 border-dashed border-line text-[10px] text-ink3">
+            <div className="flex h-[72px] w-[72px] flex-col items-center justify-center gap-1 rounded-2xl border-2 border-dashed border-ink/15 text-[10px] text-ink3">
               <Camera size={20} /> {t('custom.photo')}
             </div>
           )}

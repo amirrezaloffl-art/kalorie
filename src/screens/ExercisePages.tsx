@@ -52,10 +52,10 @@ export function AddExercise({ page }: { page: Extract<PageT, { kind: 'addExercis
         </IconBtn>
       }
     >
-      <div className="sticky top-0 z-10 -mx-4 bg-bg px-4 pb-2">
+      <div className="sticky top-0 z-10 -mx-4 px-4 pb-2">
         <div className="relative">
           <Search size={18} className="absolute start-3 top-1/2 -translate-y-1/2 text-ink3" />
-          <TextInput autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('exercise.searchPlaceholder')} className="h-12 rounded-full ps-10" />
+          <TextInput autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('exercise.searchPlaceholder')} className="glass-strong h-12 rounded-full ps-10" />
         </div>
         {!q.trim() && (
           <Segmented
@@ -193,7 +193,7 @@ export function ExerciseDetail({ page }: { page: Extract<PageT, { kind: 'exercis
         </Field>
         <div className="mt-2 flex flex-wrap gap-2">
           {[15, 30, 45, 60, 90].map((m) => (
-            <button key={m} onClick={() => setMinutes(m)} className={cx('num rounded-full border px-3 py-1 text-sm', minutes === m ? 'border-accent bg-accentSoft text-accent' : 'border-line')}>
+            <button key={m} onClick={() => setMinutes(m)} className={cx('num rounded-full px-3 py-1 text-sm', minutes === m ? 'glass-tint' : 'glass-thin')}>
               {n(m)}
             </button>
           ))}

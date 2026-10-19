@@ -64,10 +64,10 @@ export function AddFood({ page }: { page: Extract<PageT, { kind: 'addFood' }> })
           <p className="text-xs text-ink3">{t('addFood.barcodeHint')}</p>
         </div>
       ) : (
-        <div className="sticky top-0 z-10 -mx-4 bg-bg px-4 pb-2">
+        <div className="sticky top-0 z-10 -mx-4 px-4 pb-2">
           <div className="relative">
             <Search size={18} className="absolute start-3 top-1/2 -translate-y-1/2 text-ink3" />
-            <TextInput autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('addFood.searchPlaceholder')} className="h-12 rounded-full ps-10" />
+            <TextInput autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('addFood.searchPlaceholder')} className="glass-strong h-12 rounded-full ps-10" />
           </div>
           {!q.trim() && (
             <Segmented
@@ -85,7 +85,7 @@ export function AddFood({ page }: { page: Extract<PageT, { kind: 'addFood' }> })
           {!q.trim() && tab === 'all' && (
             <div className="no-scrollbar -mx-4 mt-2 flex gap-2 overflow-x-auto px-4">
               {(['any', ...categories] as const).map((c) => (
-                <button key={c} onClick={() => setCat(c)} className={cx('shrink-0 rounded-full border px-3 py-1 text-xs', cat === c ? 'border-accent bg-accent text-white' : 'border-line bg-surface')}>
+                <button key={c} onClick={() => setCat(c)} className={cx('shrink-0 rounded-full px-3 py-1 text-xs', cat === c ? 'glass-tint' : 'glass')}>
                   {t(`cat.${c}`)}
                 </button>
               ))}

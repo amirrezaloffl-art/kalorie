@@ -12,7 +12,7 @@ export function Card({ className, children, onClick }: { className?: string; chi
   return (
     <div
       onClick={onClick}
-      className={cx('rounded-lg border border-line bg-surface p-4 shadow-card', onClick && 'cursor-pointer active:scale-[0.99] transition-transform', className)}
+      className={cx('glass rounded-[28px] p-4', onClick && 'cursor-pointer transition-transform active:scale-[0.99]', className)}
     >
       {children}
     </div>
@@ -37,17 +37,21 @@ export const ForwardIcon = ({ size = 18, className }: { size?: number; className
 /** A full-screen page stacked above the tab screens. */
 export function Page({ title, children, footer, actions, onBack }: { title: ReactNode; children: ReactNode; footer?: ReactNode; actions?: ReactNode; onBack?: () => void }) {
   return (
-    <div className="anim-page fixed inset-0 z-30 flex flex-col bg-bg">
+    <div className="anim-page app-bg fixed inset-0 z-30 flex flex-col">
       <div className="mx-auto flex w-full max-w-xl flex-1 flex-col overflow-hidden">
         <header className="pt-safe flex items-center gap-2 px-3 pb-2">
-          <IconBtn label="back" onClick={onBack ?? closePage}>
+          <IconBtn label="back" className="glass" onClick={onBack ?? closePage}>
             <BackIcon />
           </IconBtn>
           <h1 className="flex-1 truncate text-lg font-bold">{title}</h1>
-          {actions}
+          {actions && <div className="glass flex items-center rounded-full">{actions}</div>}
         </header>
         <main className="no-scrollbar flex-1 overflow-y-auto px-4 pb-6">{children}</main>
-        {footer && <footer className="pb-safe border-t border-line bg-surface px-4 pt-3">{footer}</footer>}
+        {footer && (
+          <footer className="pb-safe px-4 pt-2">
+            <div className="glass-strong rounded-[30px] p-2">{footer}</div>
+          </footer>
+        )}
       </div>
     </div>
   );
@@ -57,9 +61,9 @@ export function Sheet({ open, onClose, title, children }: { open: boolean; onClo
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-40 flex items-end justify-center">
-      <div className="anim-fade absolute inset-0 bg-black/40" onClick={onClose} />
-      <div className="anim-sheet pb-safe relative max-h-[90dvh] w-full max-w-xl overflow-y-auto rounded-t-lg bg-surface px-4 pt-3">
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line" />
+      <div className="anim-fade absolute inset-0 bg-black/25" onClick={onClose} />
+      <div className="anim-sheet glass-strong pb-safe relative mx-2 mb-2 max-h-[88dvh] w-full max-w-xl overflow-y-auto rounded-[34px] px-4 pt-3">
+        <div className="mx-auto mb-3 h-1.5 w-10 rounded-full bg-ink/20" />
         {title && (
           <div className="mb-3 flex items-center justify-between">
             <h3 className="text-lg font-bold">{title}</h3>
@@ -79,7 +83,7 @@ export function Toast() {
   if (!toast) return null;
   return (
     <div className="anim-fade pointer-events-none fixed inset-x-0 top-[max(env(safe-area-inset-top),16px)] z-50 flex justify-center px-4">
-      <div className="rounded-full bg-primary px-4 py-2 text-sm text-onPrimary shadow-card">{toast.text}</div>
+      <div className="glass-strong rounded-full px-5 py-2.5 text-sm font-medium">{toast.text}</div>
     </div>
   );
 }
@@ -97,11 +101,10 @@ export function Button({ variant = 'primary', size = 'md', block, className, ...
         size === 'sm' && 'h-9 px-3 text-sm',
         size === 'md' && 'h-11 px-5',
         size === 'lg' && 'h-14 px-6 text-lg',
-        variant === 'primary' && 'bg-primary text-onPrimary',
-        variant === 'accent' && 'bg-accent text-white',
-        variant === 'secondary' && 'border border-line bg-surface text-ink',
-        variant === 'ghost' && 'text-ink2 hover:bg-surface2',
-        variant === 'danger' && 'bg-bad/10 text-bad',
+        (variant === 'primary' || variant === 'accent') && 'glass-tint',
+        variant === 'secondary' && 'glass text-ink',
+        variant === 'ghost' && 'text-ink2 hover:bg-ink/5',
+        variant === 'danger' && 'glass text-bad',
         block && 'w-full',
         className,
       )}
@@ -115,19 +118,19 @@ export function IconBtn({ label, className, ...p }: ButtonHTMLAttributes<HTMLBut
     <button
       aria-label={t(`a11y.${label}`, label)}
       {...p}
-      className={cx('inline-flex h-10 w-10 items-center justify-center rounded-full text-ink transition hover:bg-surface2 active:scale-95', className)}
+      className={cx('inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-ink transition hover:bg-ink/5 active:scale-95', className)}
     />
   );
 }
 
 export function Segmented<T extends string>({ options, value, onChange, className }: { options: { value: T; label: ReactNode }[]; value: T; onChange: (v: T) => void; className?: string }) {
   return (
-    <div className={cx('flex rounded-full bg-surface2 p-1', className)}>
+    <div className={cx('glass-thin flex rounded-full p-1', className)}>
       {options.map((o) => (
         <button
           key={o.value}
           onClick={() => onChange(o.value)}
-          className={cx('flex-1 rounded-full px-3 py-1.5 text-sm font-medium transition', value === o.value ? 'bg-surface text-ink shadow-card' : 'text-ink2')}
+          className={cx('flex-1 rounded-full border px-3 py-1.5 text-sm font-medium transition', value === o.value ? 'glass-pill text-ink' : 'border-transparent text-ink2')}
         >
           {o.label}
         </button>
@@ -145,7 +148,7 @@ export function Chips<T extends string>({ options, value, onChange }: { options:
           onClick={() => onChange(o.value)}
           className={cx(
             'shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition',
-            value === o.value ? 'border-accent bg-accent text-white' : 'border-line bg-surface text-ink',
+            value === o.value ? 'glass-tint' : 'glass-thin text-ink',
           )}
         >
           {o.label}
@@ -157,10 +160,10 @@ export function Chips<T extends string>({ options, value, onChange }: { options:
 
 export function Stepper({ value, onChange, step = 1, min = 0, format, compact }: { value: number; onChange: (v: number) => void; step?: number; min?: number; format?: (v: number) => ReactNode; compact?: boolean }) {
   const round = (v: number) => Math.round(v * 1000) / 1000;
-  const btn = cx('flex items-center justify-center rounded-full bg-surface shadow-card active:scale-90', compact ? 'h-7 w-7' : 'h-8 w-8');
+  const btn = cx('glass-pill flex items-center justify-center rounded-full active:scale-90', compact ? 'h-7 w-7' : 'h-8 w-8');
   const label = format ? format(value) : value;
   return (
-    <div className="flex shrink-0 items-center gap-1 rounded-full bg-surface2 p-1">
+    <div className="glass-thin flex shrink-0 items-center gap-1 rounded-full p-1">
       <button aria-label="−" className={btn} onClick={() => onChange(Math.max(min, round(value - step)))}>
         <Minus size={compact ? 14 : 16} />
       </button>
@@ -180,7 +183,7 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
         role="switch"
         aria-checked={checked}
         onClick={() => onChange(!checked)}
-        className={cx('relative h-7 w-12 shrink-0 rounded-full transition', checked ? 'bg-accent' : 'bg-line')}
+        className={cx('relative h-7 w-12 shrink-0 rounded-full transition', checked ? 'bg-good' : 'bg-ink/15')}
       >
         <span className={cx('absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-all', checked ? 'start-6' : 'start-1')} />
       </button>
@@ -198,7 +201,7 @@ export function Field({ label, children, hint }: { label: ReactNode; children: R
   );
 }
 
-const inputCls = 'h-11 w-full rounded-md border border-line bg-surface px-3 outline-none focus:border-accent';
+const inputCls = 'glass-thin h-11 w-full rounded-2xl px-3 outline-none transition focus:border-accent/60 focus:bg-white/40';
 
 export function TextInput(p: InputHTMLAttributes<HTMLInputElement>) {
   return <input {...p} className={cx(inputCls, p.className)} />;
@@ -257,14 +260,14 @@ export function Select<T extends string | number>({ value, onChange, options }: 
 export function ProgressBar({ value, max, color = 'rgb(var(--accent))', className }: { value: number; max: number; color?: string; className?: string }) {
   const pct = max > 0 ? Math.min(100, (value / max) * 100) : 0;
   return (
-    <div className={cx('h-1.5 w-full overflow-hidden rounded-full bg-accentSoft', className)}>
+    <div className={cx('h-1.5 w-full overflow-hidden rounded-full bg-ink/10', className)}>
       <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: color }} />
     </div>
   );
 }
 
 /** Circular progress ring. */
-export function Ring({ value, max, size = 180, stroke = 14, color = 'rgb(var(--accent))', track = 'rgb(var(--accent-soft))', children }: { value: number; max: number; size?: number; stroke?: number; color?: string; track?: string; children?: ReactNode }) {
+export function Ring({ value, max, size = 180, stroke = 14, color = 'rgb(var(--accent))', track = 'rgb(var(--text) / 0.08)', children }: { value: number; max: number; size?: number; stroke?: number; color?: string; track?: string; children?: ReactNode }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const pct = max > 0 ? Math.min(1, Math.max(0, value / max)) : 0;
@@ -292,7 +295,7 @@ export function Ring({ value, max, size = 180, stroke = 14, color = 'rgb(var(--a
 
 export function Empty({ text, icon, action }: { text: ReactNode; icon?: ReactNode; action?: ReactNode }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-line px-4 py-6 text-center text-sm text-ink3">
+    <div className="flex flex-col items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-ink/15 px-4 py-6 text-center text-sm text-ink3">
       {icon}
       <span>{text}</span>
       {action}
@@ -331,7 +334,7 @@ export function MacroChips({ p, c, f, fiber }: { p: number; c: number; f: number
 
 export function ListRow({ children, onClick, className }: { children: ReactNode; onClick?: () => void; className?: string }) {
   return (
-    <button onClick={onClick} className={cx('flex w-full items-center gap-3 rounded-md px-2 py-2.5 text-start transition hover:bg-surface2 active:bg-surface2', className)}>
+    <button onClick={onClick} className={cx('flex w-full items-center gap-3 rounded-2xl px-2 py-2.5 text-start transition hover:bg-white/30 active:bg-white/40 dark:hover:bg-white/5', className)}>
       {children}
     </button>
   );
@@ -352,8 +355,8 @@ export function Swipeable({ children, onDelete, deleteLabel }: { children: React
         </button>
       )}
       <div
-        className="relative bg-surface transition-transform"
-        style={{ transform: `translateX(${dx}px)`, transitionDuration: start.current ? '0ms' : '200ms' }}
+        className="relative transition-transform"
+        style={{ transform: `translateX(${dx}px)`, transitionDuration: start.current ? '0ms' : '200ms', background: dx ? 'rgb(var(--surface))' : undefined }}
         onTouchStart={(e) => (start.current = { x: e.touches[0].clientX, y: e.touches[0].clientY })}
         onTouchMove={(e) => {
           if (!start.current) return;

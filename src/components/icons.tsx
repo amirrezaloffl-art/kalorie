@@ -28,9 +28,9 @@ export function FoodThumb({ food, size = 44, className }: { food: Pick<Food, 'id
   const url = useApp((s) => (food.imageId ? s.imageUrls[food.imageId] : undefined));
   const tint = FOOD_TINT[food.category] ?? '#7C5CFA';
   const Icon = fishOr(food) ?? coffeeOr(food) ?? candyOr(food) ?? foodIcon(food.category);
-  if (url) return <img src={url} alt="" className={cx('shrink-0 rounded-md object-cover', className)} style={{ width: size, height: size }} />;
+  if (url) return <img src={url} alt="" className={cx('shrink-0 rounded-2xl object-cover', className)} style={{ width: size, height: size }} />;
   return (
-    <div className={cx('flex shrink-0 items-center justify-center rounded-md', className)} style={{ width: size, height: size, background: `${tint}1f`, color: tint }}>
+    <div className={cx('flex shrink-0 items-center justify-center rounded-2xl', className)} style={{ width: size, height: size, background: `${tint}1f`, color: tint }}>
       <Icon size={size * 0.48} strokeWidth={1.7} />
     </div>
   );
@@ -49,7 +49,7 @@ export function ExerciseThumb({ category, size = 44 }: { category: ExerciseCateg
   const Icon = EX_ICONS[category] ?? Activity;
   const tint = EX_COLORS[category] ?? '#7C5CFA';
   return (
-    <div className="flex shrink-0 items-center justify-center rounded-md" style={{ width: size, height: size, background: `${tint}1f`, color: tint }}>
+    <div className="flex shrink-0 items-center justify-center rounded-2xl" style={{ width: size, height: size, background: `${tint}1f`, color: tint }}>
       <Icon size={size * 0.48} strokeWidth={1.7} />
     </div>
   );

@@ -124,7 +124,7 @@ export function FoodDetail({ page }: { page: Extract<PageT, { kind: 'food' }> })
         {!isBase && (
           <div className="mt-3 flex flex-wrap gap-2">
             {FRACTIONS.map((f) => (
-              <button key={f} onClick={() => setAmount(f)} className={cx('num rounded-full border px-3 py-1 text-sm', amount === f ? 'border-accent bg-accentSoft text-accent' : 'border-line')}>
+              <button key={f} onClick={() => setAmount(f)} className={cx('num rounded-full px-3 py-1 text-sm', amount === f ? 'glass-tint' : 'glass-thin')}>
                 {L.amt(f)}
               </button>
             ))}

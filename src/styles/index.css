@@ -11,26 +11,39 @@
 
 /* Design tokens as RGB triplets so Tailwind can apply alpha. */
 :root {
-  --bg: 244 245 248;
+  --bg: 238 240 247;
   --surface: 255 255 255;
-  --surface-2: 247 246 252;
-  --border: 236 235 243;
+  --surface-2: 246 245 252;
+  --border: 226 225 236;
   --text: 18 18 23;
-  --text-2: 107 107 120;
-  --text-3: 163 163 176;
+  --text-2: 98 98 112;
+  --text-3: 150 150 166;
   --accent: 124 92 250;
-  --accent-soft: 238 233 255;
+  --accent-soft: 236 231 255;
   --protein: 242 109 109;
   --carbs: 242 169 59;
   --fat: 91 141 239;
   --fiber: 61 191 168;
   --water: 79 163 247;
-  --good: 76 195 107;
-  --warn: 242 169 59;
+  --good: 52 180 90;
+  --warn: 232 152 40;
   --bad: 229 72 77;
   --primary: 18 18 23;
   --on-primary: 255 255 255;
-  --hero-grad: linear-gradient(180deg, #7c5cfa 0%, #b9a6ff 55%, rgb(var(--bg)) 100%);
+
+  /* iOS 26 "Liquid Glass" */
+  --mesh:
+    radial-gradient(ellipse 75% 55% at 10% 0%, rgba(124, 92, 250, 0.50), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 100% 12%, rgba(79, 163, 247, 0.42), transparent 70%),
+    radial-gradient(ellipse 65% 55% at 92% 78%, rgba(242, 109, 169, 0.32), transparent 70%),
+    radial-gradient(ellipse 70% 55% at 0% 96%, rgba(61, 191, 168, 0.32), transparent 70%);
+  --glass-bg: rgba(255, 255, 255, 0.52);
+  --glass-bg-strong: rgba(255, 255, 255, 0.72);
+  --glass-bg-thin: rgba(255, 255, 255, 0.32);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+  --glass-shadow: 0 8px 32px rgba(40, 30, 90, 0.10), 0 1px 2px rgba(40, 30, 90, 0.06);
+  --glass-blur: blur(24px) saturate(180%);
   --font: 'Vazirmatn', 'Inter';
   color-scheme: light;
 }
@@ -39,20 +52,29 @@ html[lang='en'] {
   --font: 'Inter', 'Vazirmatn';
 }
 
-/* Dark theme (from reference images 3-4) */
 [data-theme='dark'] {
-  --bg: 12 12 16;
-  --surface: 24 24 30;
-  --surface-2: 32 31 41;
-  --border: 44 43 54;
-  --text: 242 242 247;
-  --text-2: 160 160 175;
-  --text-3: 105 105 120;
-  --accent: 150 125 255;
-  --accent-soft: 45 38 78;
-  --primary: 242 242 247;
+  --bg: 9 9 14;
+  --surface: 28 28 36;
+  --surface-2: 38 37 48;
+  --border: 52 51 64;
+  --text: 244 244 248;
+  --text-2: 170 170 186;
+  --text-3: 112 112 128;
+  --accent: 156 132 255;
+  --accent-soft: 52 44 92;
+  --primary: 244 244 248;
   --on-primary: 18 18 23;
-  --hero-grad: linear-gradient(180deg, #4b33b8 0%, #2a2057 55%, rgb(var(--bg)) 100%);
+  --mesh:
+    radial-gradient(ellipse 70% 50% at 10% 0%, rgba(124, 92, 250, 0.40), transparent 70%),
+    radial-gradient(ellipse 60% 45% at 95% 8%, rgba(40, 110, 230, 0.30), transparent 70%),
+    radial-gradient(ellipse 60% 50% at 90% 75%, rgba(200, 60, 140, 0.20), transparent 70%),
+    radial-gradient(ellipse 65% 50% at 0% 95%, rgba(30, 150, 130, 0.20), transparent 70%);
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-bg-strong: rgba(30, 30, 40, 0.72);
+  --glass-bg-thin: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.13);
+  --glass-edge: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
   color-scheme: dark;
 }
 
@@ -68,6 +90,56 @@ body {
 
 body {
   min-height: 100dvh;
+}
+
+/* Colorful backdrop that the glass refracts. */
+.app-bg {
+  background-color: rgb(var(--bg));
+  background-image: var(--mesh);
+}
+
+@layer components {
+  .glass,
+  .glass-strong,
+  .glass-thin {
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-edge), var(--glass-shadow);
+    -webkit-backdrop-filter: var(--glass-blur);
+    backdrop-filter: var(--glass-blur);
+  }
+  .glass {
+    background: var(--glass-bg);
+  }
+  .glass-strong {
+    background: var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    backdrop-filter: blur(40px) saturate(200%);
+  }
+  .glass-thin {
+    background: var(--glass-bg-thin);
+    box-shadow: var(--glass-edge);
+  }
+  /* Selected pill / raised control inside a glass container */
+  .glass-pill {
+    background: var(--glass-bg-strong);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-edge), 0 2px 10px rgba(40, 30, 90, 0.12);
+  }
+  /* Tinted, prominent glass for primary actions */
+  .glass-tint {
+    background: linear-gradient(180deg, rgb(var(--accent) / 0.92), rgb(var(--accent) / 0.78));
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 8px 24px rgb(var(--accent) / 0.35);
+    color: white;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass,
+  .glass-strong,
+  .glass-thin {
+    background: rgb(var(--surface) / 0.94);
+  }
 }
 
 input,

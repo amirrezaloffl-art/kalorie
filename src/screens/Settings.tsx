@@ -114,7 +114,7 @@ export function SettingsPage() {
         <Field label={t('settings.dailyKcal')} hint={!s.goal.manualKcal ? t('settings.autoKcal') : undefined}>
           <NumInput value={s.goal.dailyKcal} onChange={(v) => v && s.goal.manualKcal && set((x) => ({ ...x, goal: { ...x.goal, dailyKcal: Math.round(v) } }))} className={!s.goal.manualKcal ? 'opacity-60' : ''} />
         </Field>
-        {lowKcal && <p className="mt-1 rounded-md bg-warn/15 p-2 text-xs text-warn">{t('settings.lowKcalWarning', { floor: n(kcalFloor(s.profile.sex)) })}</p>}
+        {lowKcal && <p className="mt-1 rounded-2xl bg-warn/15 p-2 text-xs text-warn">{t('settings.lowKcalWarning', { floor: n(kcalFloor(s.profile.sex)) })}</p>}
       </Section>
 
       <Section title={t('settings.macros')}>
@@ -211,7 +211,7 @@ export function SettingsPage() {
           <p className="text-xs text-ink3">{s.lastBackupAt ? t('data.lastBackup', { date: L.date(s.lastBackupAt, 'D MMMM YYYY') }) : t('data.neverBackedUp')}</p>
         </div>
 
-        <div className="mt-4 border-t border-line pt-3">
+        <div className="mt-4 border-t border-ink/10 pt-3">
           <div className="mb-1 font-medium">{t('data.folder')}</div>
           {folder === 'unsupported' ? (
             <p className="text-xs text-ink2">{t('data.folderUnsupported')}</p>
@@ -253,7 +253,7 @@ export function SettingsPage() {
           )}
         </div>
 
-        <div className="mt-4 border-t border-line pt-3">
+        <div className="mt-4 border-t border-ink/10 pt-3">
           <Button
             variant="danger"
             block

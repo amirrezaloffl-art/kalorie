@@ -28,25 +28,25 @@ export function Home() {
   return (
     <div className="pb-28">
       {/* Hero */}
-      <div className="pt-safe px-4 pb-6" style={{ background: 'var(--hero-grad)' }}>
-        <div className="flex items-center justify-between py-2 text-white">
+      <div className="pt-safe px-4 pb-6">
+        <div className="flex items-center justify-between py-2">
           <div>
             <div className="text-lg font-bold">
               {t(`home.greet.${greet}`)}
               {settings.userName ? (L.lang === 'fa' ? '، ' : ', ') + settings.userName : ''}
             </div>
-            <div className="text-sm opacity-85">{L.date(date, 'dddd D MMMM YYYY')}</div>
+            <div className="text-sm text-ink2">{L.date(date, 'dddd D MMMM YYYY')}</div>
           </div>
-          <button aria-label={t('settings.title')} onClick={() => openPage({ kind: 'settings' })} className="flex h-11 w-11 items-center justify-center rounded-full bg-white/20 text-white backdrop-blur">
+          <button aria-label={t('settings.title')} onClick={() => openPage({ kind: 'settings' })} className="glass flex h-11 w-11 items-center justify-center rounded-full text-accent">
             {settings.userName ? <span className="text-lg font-bold">{settings.userName.slice(0, 1)}</span> : <User size={20} />}
           </button>
         </div>
-        <div className="mt-2">
+        <div className="glass mt-2 rounded-[28px] p-1.5">
           <WeekStrip date={date} onChange={setDate} />
         </div>
         {date !== today && (
           <div className="mt-2 text-center">
-            <button className="rounded-full bg-white/20 px-3 py-1 text-xs text-white" onClick={() => setDate(today)}>
+            <button className="glass rounded-full px-3 py-1 text-xs text-accent" onClick={() => setDate(today)}>
               {t('common.backToToday')}
             </button>
           </div>
@@ -114,7 +114,7 @@ function MacroCard({ label, value, target, color }: { label: string; value: numb
   return (
     <Card className="p-3">
       <div className="text-xs text-ink2">{label}</div>
-      <div className="num mt-1 text-sm">
+      <div className="num mt-1 whitespace-nowrap text-[13px]">
         <b className="text-base">{n(value)}</b>
         <span className="text-ink3"> / {n(target)} {t('unit.g')}</span>
       </div>
@@ -125,8 +125,8 @@ function MacroCard({ label, value, target, color }: { label: string; value: numb
 
 function QuickAction({ icon, label, onClick }: { icon: React.ReactNode; label: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className="flex flex-col items-center gap-1.5 rounded-lg border border-line bg-surface p-3 text-xs font-medium shadow-card active:scale-[0.97]">
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accentSoft text-accent">{icon}</span>
+    <button onClick={onClick} className="glass flex flex-col items-center gap-1.5 rounded-[26px] p-3 text-xs font-medium active:scale-[0.97]">
+      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent/15 text-accent">{icon}</span>
       {label}
     </button>
   );
@@ -160,7 +160,7 @@ function ExerciseCard({ date, burned, minutes }: { date: string; burned: number;
               <span className="num text-sm font-bold">{n(s.kcal)} <span className="text-xs font-normal text-ink3">{t('unit.kcal')}</span></span>
             </button>
           ))}
-          <div className="flex justify-between border-t border-line pt-2 text-xs text-ink2">
+          <div className="flex justify-between border-t border-ink/10 pt-2 text-xs text-ink2">
             <span>{t('home.activeMinutes', { n: n(minutes) })}</span>
             <span>{n(burned)} {t('unit.kcal')}</span>
           </div>
@@ -196,7 +196,7 @@ function WaterCard({ date, glasses }: { date: string; glasses: number }) {
       </div>
       <div className="mb-3 flex gap-1">
         {Array.from({ length: segs }, (_, i) => (
-          <div key={i} className={cx('h-8 flex-1 rounded-sm transition', i < glasses ? 'bg-water' : 'bg-water/15')} />
+          <div key={i} className={cx('h-8 flex-1 rounded-full transition', i < glasses ? 'bg-water shadow-[inset_0_1px_0_rgba(255,255,255,.5)]' : 'bg-water/15')} />
         ))}
       </div>
       <div className="flex items-center gap-2">
@@ -324,7 +324,7 @@ function Reminders() {
   const due = hasData && folder !== 'connected' && (!last || daysSince(last, todayIso()) >= 7);
   if (!due) return null;
   return (
-    <Card className="flex items-center gap-3 border-accent/30 bg-accentSoft">
+    <Card className="flex items-center gap-3 !bg-accent/10">
       <Archive size={22} className="shrink-0 text-accent" />
       <div className="flex-1 text-sm">{t('backup.reminder')}</div>
       <Button

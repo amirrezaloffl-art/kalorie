@@ -36,6 +36,7 @@ export function Onboarding() {
 
   return (
     <div className="pt-safe pb-safe mx-auto flex min-h-dvh max-w-md flex-col px-5">
+      <div className="app-bg fixed inset-0 -z-10" aria-hidden />
       <div className="py-6 text-center">
         <img src="./icons/icon.svg" alt="" className="mx-auto mb-3 h-16 w-16" />
         <h1 className="text-2xl font-bold">{t('onboarding.welcome')}</h1>
@@ -43,7 +44,7 @@ export function Onboarding() {
       </div>
       <div className="mb-4 flex gap-1">
         {Array.from({ length: steps }, (_, i) => (
-          <div key={i} className={`h-1 flex-1 rounded-full ${i <= step ? 'bg-accent' : 'bg-line'}`} />
+          <div key={i} className={`h-1 flex-1 rounded-full ${i <= step ? 'bg-accent' : 'bg-ink/15'}`} />
         ))}
       </div>
 
@@ -99,7 +100,7 @@ export function Onboarding() {
             <div className="num my-2 text-5xl font-bold text-accent">{n(g.kcal)}</div>
             <div className="text-sm text-ink2">{t('unit.kcal')} / {t('day.today')}</div>
             <p className="mt-3 text-xs text-ink3">{t('settings.tdee', { tdee: n(g.tdee), kg: n(kg ?? 70, 1) })}</p>
-            {g.kcal < kcalFloor(s.profile.sex) && <p className="mt-2 rounded-md bg-warn/15 p-2 text-xs text-warn">{t('settings.lowKcalWarning', { floor: n(kcalFloor(s.profile.sex)) })}</p>}
+            {g.kcal < kcalFloor(s.profile.sex) && <p className="mt-2 rounded-2xl bg-warn/15 p-2 text-xs text-warn">{t('settings.lowKcalWarning', { floor: n(kcalFloor(s.profile.sex)) })}</p>}
             <p className="mt-3 text-xs text-ink3">{t('onboarding.editLater')}</p>
           </Card>
         )}

@@ -115,7 +115,7 @@ export function WeightPage() {
       <h3 className="mb-2 mt-4 font-bold">{t('weight.history')}</h3>
       <div className="space-y-1">
         {[...weights].reverse().map((w) => (
-          <div key={w.id} className="flex items-center gap-3 rounded-md bg-surface px-3 py-2">
+          <div key={w.id} className="glass-thin flex items-center gap-3 rounded-2xl px-3 py-2">
             <div className="flex-1">
               <div className="num font-medium">{n(w.kg, 1)} {t('unit.kg')}{w.waistCm ? <span className="text-xs text-ink2"> • {t('weight.waist')} {n(w.waistCm)}</span> : null}</div>
               <div className="text-xs text-ink2">{L.date(w.date, 'dddd D MMMM YYYY')}{w.note ? ` • ${w.note}` : ''}</div>

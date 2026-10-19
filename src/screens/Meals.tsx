@@ -87,7 +87,7 @@ function MealSection({ date, mealId, title }: { date: string; mealId: MealId; ti
           <IconBtn label="more" onClick={() => setMenu(true)}>
             <MoreHorizontal size={20} />
           </IconBtn>
-          <IconBtn label="addFood" className="bg-accentSoft text-accent" onClick={() => openPage({ kind: 'addFood', date, mealId })}>
+          <IconBtn label="addFood" className="glass-tint" onClick={() => openPage({ kind: 'addFood', date, mealId })}>
             <Plus size={20} />
           </IconBtn>
         </div>

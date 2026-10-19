@@ -67,7 +67,7 @@ export function ExerciseScreen() {
                   <button
                     key={d}
                     onClick={() => updateSettings((s) => ({ ...s, exercise: { ...s.exercise, plannedWeekdays: on ? s.exercise.plannedWeekdays.filter((x) => x !== dow) : [...s.exercise.plannedWeekdays, dow] } }))}
-                    className={cx('rounded-md py-2 text-xs font-medium transition', on ? 'bg-protein text-white' : 'bg-surface2 text-ink2')}
+                    className={cx('rounded-2xl py-2 text-xs font-medium transition', on ? 'bg-protein text-white shadow-[inset_0_1px_0_rgba(255,255,255,.4)]' : 'glass-thin text-ink2')}
                   >
                     {L.date(d, 'dd')}
                   </button>

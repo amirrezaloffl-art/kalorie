@@ -7,7 +7,7 @@ It's a Progressive Web App: install it on an iPhone from Safari or as a desktop 
 ## Features
 
 - **Food logging** in each food's natural units, with fractions (¼ ½ 1½), a live kcal/macro preview, and the meal picked from the time of day.
-- **404 built-in foods** (breads, polo, khoresh, ash, kebab, sweets, drinks, fast food…), each with per-food units. Search works in Persian or English and tolerates Arabic ي/ك, missing ZWNJ and typos.
+- **585 built-in foods** (breads, polo / kateh / dami, khoresh including Gilani dishes, ash, kebab, sweets, drinks, fast food…), each with per-food units. Search works in Persian or English, tolerates Arabic ي/ك, missing ZWNJ and typos, and matches multi-word queries such as "کته ساده" word by word.
 - **Custom foods** entered per 100 g, per 100 ml or per serving (e.g. "1 biscuit = 12 g, 55 kcal"), with a photo, barcode, brand and your own units.
 - **Recipe builder** for home-cooked dishes: enter the ingredients, weigh the pot, get per-100 g values plus پرس / کاسه / ملاقه units.
 - **Unit calibration**: weigh your own کفگیر once and every log uses your number.
@@ -18,7 +18,7 @@ It's a Progressive Web App: install it on an iPhone from Safari or as a desktop 
 - **Charts** for 7 / 30 / 90 days or a custom range: calories vs goal, intake vs burned, active minutes by category, weekly burn, exercise breakdown, macros, water and weight.
 - **Goals**: Mifflin–St Jeor TDEE that updates after each weigh-in, a warning when the target drops below a safe floor, and macro targets in grams or percent.
 - **Health score** (0–100) per food with a transparent breakdown.
-- **Light and dark themes**; Persian or Latin digits, Jalali or Gregorian calendar, and a Saturday or Monday week start, each set independently.
+- **iOS 26 "Liquid Glass" look**: translucent frosted panels over a soft color backdrop, a floating capsule tab bar, and glass sheets and headers, in light and dark themes. Persian or Latin digits, Jalali or Gregorian calendar, and a Saturday or Monday week start, each set independently.
 
 ## Data and storage
 
@@ -50,7 +50,7 @@ Log entries freeze their nutrient values when you log them, so later edits to a 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # 37 unit tests (nutrition, units, TDEE, trend, health score, search, dates, backup round-trip, seed validation)
+npm test           # 38 unit tests (nutrition, units, TDEE, trend, health score, search, dates, backup round-trip, seed validation)
 npm run build      # rebuilds the food seed, type-checks, and writes the PWA to dist/
 ```
 

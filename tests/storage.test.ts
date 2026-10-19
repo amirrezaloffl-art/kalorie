@@ -80,6 +80,11 @@ describe('search', () => {
     expect(idx.search('قورمه سبزي', none)[0].id).toBe('base:stew-ghormeh-sabzi');
     expect(idx.search('كوبيده', none)[0].id).toMatch(/koobideh/);
   });
+  it('matches multi-word queries word by word', () => {
+    expect(idx.search('کته ساده', none)[0].id).toBe('base:rice-kateh');
+    expect(idx.search('مرغ پلو', none)[0].id).toBe('base:rice-morgh-polo');
+    expect(idx.search('آش', none)[0].name.fa.startsWith('آش')).toBe(true);
+  });
   it('boosts favorites', () => {
     const plain = idx.search('کباب', none).map((f) => f.id);
     const fav = idx.search('کباب', { favorites: new Set([plain[5]]), recent: [] }).map((f) => f.id);
