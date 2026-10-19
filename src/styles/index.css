@@ -1,0 +1,154 @@
+@import '@fontsource/vazirmatn/400.css';
+@import '@fontsource/vazirmatn/500.css';
+@import '@fontsource/vazirmatn/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Design tokens as RGB triplets so Tailwind can apply alpha. */
+:root {
+  --bg: 244 245 248;
+  --surface: 255 255 255;
+  --surface-2: 247 246 252;
+  --border: 236 235 243;
+  --text: 18 18 23;
+  --text-2: 107 107 120;
+  --text-3: 163 163 176;
+  --accent: 124 92 250;
+  --accent-soft: 238 233 255;
+  --protein: 242 109 109;
+  --carbs: 242 169 59;
+  --fat: 91 141 239;
+  --fiber: 61 191 168;
+  --water: 79 163 247;
+  --good: 76 195 107;
+  --warn: 242 169 59;
+  --bad: 229 72 77;
+  --primary: 18 18 23;
+  --on-primary: 255 255 255;
+  --hero-grad: linear-gradient(180deg, #7c5cfa 0%, #b9a6ff 55%, rgb(var(--bg)) 100%);
+  --font: 'Vazirmatn', 'Inter';
+  color-scheme: light;
+}
+
+html[lang='en'] {
+  --font: 'Inter', 'Vazirmatn';
+}
+
+/* Dark theme (from reference images 3-4) */
+[data-theme='dark'] {
+  --bg: 12 12 16;
+  --surface: 24 24 30;
+  --surface-2: 32 31 41;
+  --border: 44 43 54;
+  --text: 242 242 247;
+  --text-2: 160 160 175;
+  --text-3: 105 105 120;
+  --accent: 150 125 255;
+  --accent-soft: 45 38 78;
+  --primary: 242 242 247;
+  --on-primary: 18 18 23;
+  --hero-grad: linear-gradient(180deg, #4b33b8 0%, #2a2057 55%, rgb(var(--bg)) 100%);
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: rgb(var(--bg));
+  color: rgb(var(--text));
+  font-family: var(--font), system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* iOS zooms inputs below 16px */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top), 12px);
+}
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 12px);
+}
+.bottom-safe {
+  bottom: env(safe-area-inset-bottom);
+}
+
+.num {
+  font-variant-numeric: tabular-nums;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes slide-in {
+  from {
+    transform: translateX(var(--slide-from, 100%));
+    opacity: 0.6;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.anim-sheet {
+  animation: slide-up 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.anim-page {
+  animation: slide-in 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+[dir='rtl'] .anim-page {
+  --slide-from: -100%;
+}
+.anim-fade {
+  animation: fade-in 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-sheet,
+  .anim-page,
+  .anim-fade {
+    animation: none;
+  }
+}
