@@ -209,17 +209,21 @@ export function TextInput(p: InputHTMLAttributes<HTMLInputElement>) {
 
 /** Numeric input that accepts Persian/Arabic digits and shows an empty box for undefined. */
 export function NumInput({ value, onChange, placeholder, className, autoFocus, step }: { value: number | undefined; onChange: (v: number | undefined) => void; placeholder?: string; className?: string; autoFocus?: boolean; step?: string }) {
-  const [text, setText] = useState(value == null || Number.isNaN(value) ? '' : String(value));
-  const last = useRef(value);
+  const show = (v: number | undefined) => (v == null || Number.isNaN(v) ? '' : String(v));
+  const [text, setText] = useState(show(value));
+  const ref = useRef<HTMLInputElement>(null);
+  // Follow outside changes, but never while the user is typing: a parent may reject
+  // in-between values (e.g. "1" while typing "180") and must not reset the box.
   useEffect(() => {
-    if (value !== last.current) {
-      last.current = value;
-      if (parseNum(text) !== value) setText(value == null || Number.isNaN(value) ? '' : String(value));
-    }
-  }, [value, text]);
+    if (document.activeElement !== ref.current && parseNum(text) !== value) setText(show(value));
+  }, [value]); // eslint-disable-line react-hooks/exhaustive-deps
   return (
     <input
+      ref={ref}
       inputMode="decimal"
+      onBlur={() => {
+        if (parseNum(text) !== value) setText(show(value));
+      }}
       autoFocus={autoFocus}
       step={step}
       placeholder={placeholder}
@@ -227,9 +231,7 @@ export function NumInput({ value, onChange, placeholder, className, autoFocus, s
       onChange={(e) => {
         setText(e.target.value);
         const n = parseNum(e.target.value);
-        const v = e.target.value.trim() === '' || Number.isNaN(n) ? undefined : n;
-        last.current = v;
-        onChange(v);
+        onChange(e.target.value.trim() === '' || Number.isNaN(n) ? undefined : n);
       }}
       className={cx(inputCls, 'num', className)}
     />

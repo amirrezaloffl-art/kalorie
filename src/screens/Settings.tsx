@@ -1,7 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react';
 import { ArrowDown, ArrowUp, Download, FolderOpen, RefreshCw, Ruler, Trash2, Upload } from 'lucide-react';
 import { useL10n } from '../i18n';
-import { flushMirror, latestWeightKg, markBackedUp, reconnectFolder, refreshFolderState, replaceAllData, resetAll, snapshot, updateSettings, useApp } from '../store/app';
+import { flushMirror, latestWeightKg, markBackedUp, reconnectFolder, refreshFolderState, replaceAllData, resetAll, saveWeight, snapshot, updateSettings, useApp } from '../store/app';
 import { closePage, openPage, toast } from '../store/ui';
 import { dailyGoal, kcalFloor, macroTargets } from '../domain/tdee';
 import type { ActivityFactor, Settings } from '../domain/types';
@@ -9,6 +9,7 @@ import { Button, Card, Field, IconBtn, NumInput, Page, Segmented, Select, TextIn
 import { exportZip, importZip, shareOrDownload } from '../storage/files';
 import { folderSupported, forgetFolder, getFolder, pickFolder, readFolder } from '../storage/folder';
 import { todayIso } from '../utils/dates';
+import { uid } from '../utils/id';
 
 const ACTIVITY: ActivityFactor[] = [1.2, 1.375, 1.55, 1.725, 1.9];
 
@@ -31,6 +32,17 @@ export function SettingsPage() {
   const dayCount = useApp((x) => Object.keys(x.days).length);
   const customCount = useApp((x) => x.customFoods.length);
   const baseCount = useApp((x) => x.baseFoods.length);
+  const weights = useApp((x) => x.weights);
+  const currentKg = weights.length ? weights[weights.length - 1].kg : undefined;
+  const thisYear = new Date().getFullYear();
+
+  /** Typing a weight here records (or corrects) today's weigh-in, which also refreshes the goal. */
+  const setCurrentWeight = (kg: number | undefined) => {
+    if (kg == null || kg < 20 || kg > 400) return;
+    const today = todayIso();
+    const existing = weights.find((w) => w.date === today);
+    saveWeight({ ...(existing ?? { id: uid(), date: today }), kg: Math.round(kg * 10) / 10 });
+  };
   const fileRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
 
@@ -78,14 +90,21 @@ export function SettingsPage() {
         <Field label={t('settings.sex')}>
           <Segmented value={s.profile.sex} onChange={(v) => set((x) => ({ ...x, profile: { ...x.profile, sex: v } }), true)} options={[{ value: 'male', label: t('settings.male') }, { value: 'female', label: t('settings.female') }]} />
         </Field>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-2">
           <Field label={t('settings.birthYear')}>
-            <NumInput value={s.profile.birthYear} onChange={(v) => v && v > 1300 && set((x) => ({ ...x, profile: { ...x.profile, birthYear: v } }), true)} />
+            <NumInput
+              value={s.profile.birthYear}
+              onChange={(v) => v && ((v >= 1300 && v <= 1500) || (v >= 1920 && v <= thisYear)) && set((x) => ({ ...x, profile: { ...x.profile, birthYear: Math.round(v) } }), true)}
+            />
           </Field>
           <Field label={`${t('settings.height')} (${t('unit.cm')})`}>
-            <NumInput value={s.profile.heightCm} onChange={(v) => v && v > 80 && set((x) => ({ ...x, profile: { ...x.profile, heightCm: v } }), true)} />
+            <NumInput value={s.profile.heightCm} onChange={(v) => v && v >= 80 && v <= 250 && set((x) => ({ ...x, profile: { ...x.profile, heightCm: v } }), true)} />
+          </Field>
+          <Field label={`${t('settings.currentWeight')} (${t('unit.kg')})`}>
+            <NumInput value={currentKg} placeholder="—" onChange={setCurrentWeight} />
           </Field>
         </div>
+        <p className="mt-1 text-xs text-ink3">{t('settings.currentWeightHint')}</p>
         <Field label={t('settings.activity')}>
           <Select value={s.profile.activity} onChange={(v) => set((x) => ({ ...x, profile: { ...x.profile, activity: v } }), true)} options={ACTIVITY.map((a) => ({ value: a, label: t(`activity.${String(a).replace('.', '_')}`) }))} />
         </Field>
@@ -100,7 +119,7 @@ export function SettingsPage() {
         />
         <div className="mt-2 grid grid-cols-2 gap-3">
           <Field label={`${t('settings.targetKg')} (${t('unit.kg')})`}>
-            <NumInput value={s.goal.targetKg} onChange={(v) => v && set((x) => ({ ...x, goal: { ...x.goal, targetKg: v } }))} />
+            <NumInput value={s.goal.targetKg} onChange={(v) => v && v >= 20 && v <= 400 && set((x) => ({ ...x, goal: { ...x.goal, targetKg: v } }))} />
           </Field>
           <Field label={t('settings.weeklyRate')}>
             <Select
@@ -112,7 +131,10 @@ export function SettingsPage() {
         </div>
         <Toggle label={t('settings.manualKcal')} checked={s.goal.manualKcal} onChange={(v) => set((x) => ({ ...x, goal: { ...x.goal, manualKcal: v } }), true)} />
         <Field label={t('settings.dailyKcal')} hint={!s.goal.manualKcal ? t('settings.autoKcal') : undefined}>
-          <NumInput value={s.goal.dailyKcal} onChange={(v) => v && s.goal.manualKcal && set((x) => ({ ...x, goal: { ...x.goal, dailyKcal: Math.round(v) } }))} className={!s.goal.manualKcal ? 'opacity-60' : ''} />
+          <NumInput
+            value={s.goal.dailyKcal}
+            onChange={(v) => v && v >= 500 && v <= 10000 && set((x) => ({ ...x, goal: { ...x.goal, dailyKcal: Math.round(v), manualKcal: true } }))}
+          />
         </Field>
         {lowKcal && <p className="mt-1 rounded-2xl bg-warn/15 p-2 text-xs text-warn">{t('settings.lowKcalWarning', { floor: n(kcalFloor(s.profile.sex)) })}</p>}
       </Section>
