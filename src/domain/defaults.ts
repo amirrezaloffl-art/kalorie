@@ -9,6 +9,7 @@ export const DEFAULT_SETTINGS: Settings = {
   macros: { mode: 'percent', proteinG: 140, carbsG: 200, fatG: 65, proteinPct: 30, carbsPct: 40, fatPct: 30 },
   water: { glassMl: 250, goalGlasses: 8 },
   exercise: { addBackToBudget: true, mode: 'net', weeklyMinutesGoal: 150, plannedWeekdays: [] },
+  cycle: { enabled: false, cycleLength: 28, periodLength: 5, lutealBoost: false, lutealKcal: 150 },
   meals: [
     { id: 'breakfast', name: { fa: 'صبحانه', en: 'Breakfast' }, visible: true },
     { id: 'snack1', name: { fa: 'میان‌وعده صبح', en: 'Morning snack' }, visible: true },

@@ -5,7 +5,7 @@ import { entryNutrients } from '../domain/nutrition';
 import { unitGrams } from '../domain/units';
 import { exerciseKcal, metFor } from '../domain/exercise';
 import type {
-  DayLog, Exercise, ExerciseEntry, ExerciseRoutine, Food, LogEntry, MealId, MealTemplate, Recipe, Settings, UnitDef, UnitOverrides, WeightEntry,
+  CycleSymptom, DayLog, Exercise, ExerciseEntry, ExerciseRoutine, Food, LogEntry, MealId, MealTemplate, PeriodFlow, Recipe, Settings, UnitDef, UnitOverrides, WeightEntry,
 } from '../domain/types';
 import { db, kvGet, kvSet, requestPersistence } from '../storage/db';
 import { buildFiles, type AppData } from '../storage/files';
@@ -282,6 +282,23 @@ export function copyMeal(fromDate: string, toDate: string, mealId: MealId) {
   if (!src.length) return 0;
   mutateDay(toDate, (d) => ({ ...d, entries: [...d.entries, ...src.map((e) => ({ ...e, id: uid(), time: new Date().toISOString() }))] }));
   return src.length;
+}
+
+/** Log (or clear with null) period flow for a day. */
+export function setPeriod(date: string, flow: PeriodFlow | null) {
+  mutateDay(date, (d) => {
+    const next = { ...d };
+    if (flow) next.period = flow;
+    else delete next.period;
+    return next;
+  });
+}
+
+export function toggleSymptom(date: string, s: CycleSymptom) {
+  mutateDay(date, (d) => {
+    const list = d.symptoms ?? [];
+    return { ...d, symptoms: list.includes(s) ? list.filter((x) => x !== s) : [...list, s] };
+  });
 }
 
 export function setWater(date: string, glasses: number) {

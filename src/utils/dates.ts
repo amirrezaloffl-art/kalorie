@@ -51,6 +51,22 @@ export function fmtDate(iso: string, pattern: string, o: DateFmtOptions): string
 
 const JALALI_EN = ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand'];
 
+/** First and last ISO day of the (Jalali or Gregorian) month containing `iso`. */
+export function monthBounds(iso: string, calendar: CalendarKind): { start: string; end: string } {
+  if (calendar === 'jalali') {
+    const j = dayjs(iso).calendar('jalali');
+    return { start: j.startOf('month').calendar('gregory').format('YYYY-MM-DD'), end: j.endOf('month').calendar('gregory').format('YYYY-MM-DD') };
+  }
+  const d = dayjs(iso);
+  return { start: d.startOf('month').format('YYYY-MM-DD'), end: d.endOf('month').format('YYYY-MM-DD') };
+}
+
+/** First day of the month `n` months away from the month containing `iso`. */
+export function shiftMonth(iso: string, n: number, calendar: CalendarKind): string {
+  if (calendar === 'jalali') return dayjs(iso).calendar('jalali').add(n, 'month').startOf('month').calendar('gregory').format('YYYY-MM-DD');
+  return dayjs(iso).add(n, 'month').startOf('month').format('YYYY-MM-DD');
+}
+
 /** Day of week 0=Sunday … 6=Saturday */
 export const weekday = (iso: string) => dayjs(iso).day();
 

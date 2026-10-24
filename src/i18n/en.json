@@ -14,7 +14,9 @@
     "prevWeek": "Previous week",
     "remove": "Remove",
     "reset": "Reset",
-    "up": "Move up"
+    "up": "Move up",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month"
   },
   "nav": {
     "home": "Home",
@@ -340,7 +342,9 @@
     "macros": "Macros (g)",
     "macroAvg": "Average macro split",
     "water": "Water",
-    "noData": "No data in this range."
+    "noData": "No data in this range.",
+    "trends": "Trends",
+    "monthly": "Monthly"
   },
   "goal": {
     "lose": "Lose",
@@ -451,5 +455,89 @@
     "skipFolder": "Skip and start",
     "start": "Start",
     "restore": "Restore from a backup"
+  },
+  "monthly": {
+    "onTarget": "On target",
+    "under": "Under 80%",
+    "slightlyOver": "Up to 10% over",
+    "over": "Over",
+    "tapDay": "Tap a day to open its meals.",
+    "loggedDays": "Days logged",
+    "activeMinutes": "Active minutes",
+    "burned": "Burned by exercise",
+    "avgWater": "Avg water",
+    "weightChange": "Weight change",
+    "avgWeight": "Avg weight",
+    "vsPrev": "Small numbers show the change from {{month}}.",
+    "periodDays": "{{n}} period days this month",
+    "topSymptoms": "most common",
+    "dailyKcal": "Calories each day",
+    "trend12": "12-month trend",
+    "minutesTrend": "Active minutes per month"
+  },
+  "cycle": {
+    "title": "Menstrual cycle",
+    "enable": "Track my cycle",
+    "cycleLength": "Usual cycle length (days)",
+    "periodLength": "Usual period length (days)",
+    "lengthHint": "Used until 2 cycles are logged.",
+    "lutealBoost": "Add extra kcal in the luteal phase",
+    "lutealKcal": "Extra kcal per day",
+    "energyTitle": "Does the cycle change calorie needs?",
+    "energyText": "A little. In the luteal phase (the ~2 weeks before a period) resting energy use rises by about 2–10%, roughly 100–250 kcal a day, and appetite often rises too. During the period itself needs are not clearly higher. Water retention before and early in the period can add 0.5–2 kg on the scale; that is not fat.",
+    "boostOn": "Goal +{{n}} kcal in the luteal phase",
+    "boostOff": "Luteal kcal adjustment is off (turn it on in Settings)",
+    "openCalendar": "Open cycle calendar",
+    "dayN": "Day {{n}}",
+    "nextIn": "Next period in {{n}} days ({{date}})",
+    "dueToday": "Period expected today",
+    "noData": "Log the first day of your period to start predictions.",
+    "logPeriod": "Period on this day",
+    "removePeriod": "Remove period",
+    "goalIncludes": "includes +{{n}} for cycle",
+    "flow": "Flow",
+    "noFlow": "None",
+    "symptoms": "Symptoms",
+    "flows": {
+      "spotting": "Spotting",
+      "light": "Light",
+      "medium": "Medium",
+      "heavy": "Heavy"
+    },
+    "symptom": {
+      "cramps": "Cramps",
+      "bloating": "Bloating",
+      "cravings": "Cravings",
+      "fatigue": "Fatigue",
+      "headache": "Headache",
+      "mood": "Mood swings",
+      "acne": "Acne",
+      "tender": "Breast tenderness"
+    },
+    "phase": {
+      "period": "Period",
+      "follicular": "Follicular",
+      "ovulation": "Ovulation",
+      "luteal": "Luteal"
+    },
+    "tip": {
+      "period": "Energy needs are about normal. Iron-rich foods (red meat, lentils, spinach) help replace losses.",
+      "follicular": "Energy and appetite are usually at their lowest — a good time for harder workouts.",
+      "ovulation": "Around ovulation. Energy needs are about normal.",
+      "luteal": "Resting burn is slightly higher and cravings are common. Extra water weight is likely near the end."
+    },
+    "legend": {
+      "period": "Period",
+      "predicted": "Predicted",
+      "fertile": "Fertile window"
+    },
+    "avgCycle": "Avg cycle",
+    "avgPeriod": "Avg period",
+    "nextPeriod": "Next period",
+    "logged": "Cycles logged",
+    "days": "{{n}} days",
+    "learning": "Predictions improve after 2–3 logged cycles.",
+    "waterNote": "Likely includes cycle-related water weight",
+    "disclaimer": "Predictions are estimates from your own logs — not medical advice and not for contraception."
   }
 }

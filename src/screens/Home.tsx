@@ -10,6 +10,7 @@ import { daysSince } from '../domain/trend';
 import { Badge, Button, Card, cx, ProgressBar, Ring } from '../components/ui';
 import { ExerciseThumb } from '../components/icons';
 import { WeekStrip } from '../components/WeekStrip';
+import { CycleCard, useCycleOn } from './Cycle';
 import { todayIso } from '../utils/dates';
 import { exportZip, shareOrDownload } from '../storage/files';
 
@@ -20,6 +21,7 @@ export function Home() {
   const settings = useApp((s) => s.settings);
   const st = useDayStats(date);
   const today = todayIso();
+  const cycleOn = useCycleOn();
 
   const hour = new Date().getHours();
   const greet = hour < 5 ? 'night' : hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : hour < 21 ? 'evening' : 'night';
@@ -64,6 +66,7 @@ export function Home() {
             </Ring>
             <div className="flex-1 space-y-3">
               <Stat label={t('home.goal')} value={n(st.goal)} />
+              {st.cycleBonus > 0 && <div className="-mt-2 text-[11px] text-warn">{t('cycle.goalIncludes', { n: n(st.cycleBonus) })}</div>}
               <Stat label={t('home.eaten')} value={n(st.eaten.kcal)} color="rgb(var(--accent))" />
               <Stat label={t('home.burned')} value={n(st.burned)} color="rgb(var(--protein))" icon={<Flame size={14} />} />
             </div>
@@ -87,6 +90,7 @@ export function Home() {
         </div>
 
         <div className="space-y-3">
+          {cycleOn && <CycleCard date={date} />}
           <WaterCard date={date} glasses={st.day.waterGlasses} />
           <MacroDonut p={st.eaten.protein} c={st.eaten.carbs} f={st.eaten.fat} />
           <WeightCard />

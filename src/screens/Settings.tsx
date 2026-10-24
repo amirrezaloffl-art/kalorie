@@ -139,6 +139,34 @@ export function SettingsPage() {
         {lowKcal && <p className="mt-1 rounded-2xl bg-warn/15 p-2 text-xs text-warn">{t('settings.lowKcalWarning', { floor: n(kcalFloor(s.profile.sex)) })}</p>}
       </Section>
 
+      {s.profile.sex === 'female' && (
+        <Section title={t('cycle.title')}>
+          <Toggle label={t('cycle.enable')} checked={s.cycle.enabled} onChange={(v) => set((x) => ({ ...x, cycle: { ...x.cycle, enabled: v } }))} />
+          {s.cycle.enabled && (
+            <>
+              <div className="grid grid-cols-2 gap-3">
+                <Field label={t('cycle.cycleLength')} hint={t('cycle.lengthHint')}>
+                  <NumInput value={s.cycle.cycleLength} onChange={(v) => v && v >= 20 && v <= 45 && set((x) => ({ ...x, cycle: { ...x.cycle, cycleLength: Math.round(v) } }))} />
+                </Field>
+                <Field label={t('cycle.periodLength')}>
+                  <NumInput value={s.cycle.periodLength} onChange={(v) => v && v >= 2 && v <= 10 && set((x) => ({ ...x, cycle: { ...x.cycle, periodLength: Math.round(v) } }))} />
+                </Field>
+              </div>
+              <Toggle label={t('cycle.lutealBoost')} checked={s.cycle.lutealBoost} onChange={(v) => set((x) => ({ ...x, cycle: { ...x.cycle, lutealBoost: v } }))} />
+              {s.cycle.lutealBoost && (
+                <Field label={`${t('cycle.lutealKcal')} (${t('unit.kcal')})`}>
+                  <NumInput value={s.cycle.lutealKcal} onChange={(v) => v && v >= 50 && v <= 400 && set((x) => ({ ...x, cycle: { ...x.cycle, lutealKcal: Math.round(v) } }))} />
+                </Field>
+              )}
+              <p className="mt-1 text-xs text-ink2">{t('cycle.energyText')}</p>
+              <Button variant="secondary" size="sm" className="mt-2" onClick={() => openPage({ kind: 'cycle' })}>
+                {t('cycle.openCalendar')}
+              </Button>
+            </>
+          )}
+        </Section>
+      )}
+
       <Section title={t('settings.macros')}>
         <Segmented value={s.macros.mode} onChange={(v) => set((x) => ({ ...x, macros: { ...x.macros, mode: v } }))} options={[{ value: 'percent', label: t('settings.percent') }, { value: 'grams', label: t('settings.grams') }]} />
         <div className="mt-2 grid grid-cols-3 gap-2">

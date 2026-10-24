@@ -1,6 +1,7 @@
 import { useApp } from '../store/app';
 import { useL10n } from '../i18n';
 import { addDays, todayIso, weekday, weekOf } from '../utils/dates';
+import { predictedPeriodDays } from '../domain/cycle';
 import { cx, IconBtn, BackIcon, ForwardIcon } from './ui';
 
 /** Horizontal week strip (image 2). Dots: food logged; ring: planned exercise day. */
@@ -11,6 +12,8 @@ export function WeekStrip({ date, onChange }: { date: string; onChange: (d: stri
   const days = useApp((s) => s.days);
   const week = weekOf(date, start);
   const today = todayIso();
+  const cycle = useApp((s) => (s.settings.profile.sex === 'female' && s.settings.cycle.enabled ? s.settings.cycle : null));
+  const predicted = cycle ? predictedPeriodDays(week[0], week[6], days, cycle) : new Set<string>();
   return (
     <div className="flex items-center gap-1">
       <IconBtn label="prevWeek" className="h-8 w-8 text-ink2" onClick={() => onChange(addDays(date, -7))}>
@@ -37,6 +40,8 @@ export function WeekStrip({ date, onChange }: { date: string; onChange: (d: stri
               <span className="num text-sm font-bold">{fmt(d, 'D')}</span>
               <span className="flex h-1.5 items-center gap-0.5">
                 {hasFood && <span className={cx('h-1.5 w-1.5 rounded-full', sel ? 'bg-white' : 'bg-accent')} />}
+                {cycle && log?.period && <span className="h-1.5 w-1.5 rounded-full bg-bad" />}
+                {cycle && predicted.has(d) && <span className="h-1.5 w-1.5 rounded-full border border-bad" />}
                 {isPlanned && <span className={cx('h-1.5 w-1.5 rounded-full border', didEx ? 'border-good bg-good' : sel ? 'border-white' : 'border-protein')} />}
               </span>
             </button>

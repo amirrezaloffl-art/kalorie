@@ -2,21 +2,75 @@ import { useMemo, useState, type ReactNode } from 'react';
 import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, Legend, Line, Pie, PieChart, ReferenceLine, ResponsiveContainer, Scatter, Tooltip, XAxis, YAxis } from 'recharts';
 import { useL10n } from '../i18n';
 import { useApp } from '../store/app';
-import { dayStats } from '../store/selectors';
+import { dayStats, goalFor } from '../store/selectors';
 import { ewma } from '../domain/trend';
 import { macroSplit } from '../domain/nutrition';
-import type { DayLog, ExerciseCategoryId } from '../domain/types';
+import type { DayLog, ExerciseCategoryId, Settings } from '../domain/types';
+import { MonthlyOverview } from './Monthly';
 import { Card, Segmented, TextInput } from '../components/ui';
 import { EX_COLORS } from '../components/icons';
 import { addDays, rangeDays, todayIso, weekOf } from '../utils/dates';
 
 type Range = '7' | '30' | '90' | 'custom';
 
-const axisTick = { fontSize: 10, fill: 'rgb(var(--text-2))' };
-const tooltipStyle = { background: 'rgb(var(--surface))', border: '1px solid rgb(var(--border))', borderRadius: 12, fontSize: 12 };
+export const axisTick = { fontSize: 10, fill: 'rgb(var(--text-2))' };
+export const tooltipStyle = { background: 'rgb(var(--surface))', border: '1px solid rgb(var(--border))', borderRadius: 12, fontSize: 12 };
 const PIE_COLORS = ['#7C5CFA', '#F26D6D', '#F2A93B', '#5B8DEF', '#3DBFA8', '#4CC36B', '#E86FB5', '#9A9AA8'];
 
+/** Per-day numbers shared by the range charts and the monthly overview. */
+export function dayRow(d: string, allDays: Record<string, DayLog>, settings: Settings) {
+  const day: DayLog = allDays[d] ?? { date: d, entries: [], exercises: [], waterGlasses: 0 };
+  const addBack = settings.exercise.addBackToBudget;
+  const goal = goalFor(d, settings, allDays);
+  const st = dayStats(day, goal, addBack);
+  const budget = goal + (addBack ? st.burned : 0);
+  const byCat: Partial<Record<ExerciseCategoryId, number>> = {};
+  for (const e of day.exercises) byCat[e.category] = (byCat[e.category] ?? 0) + e.minutes;
+  return {
+    date: d,
+    kcal: st.eaten.kcal,
+    burned: st.burned,
+    net: st.eaten.kcal - st.burned,
+    goal,
+    budget,
+    protein: st.eaten.protein,
+    carbs: st.eaten.carbs,
+    fat: st.eaten.fat,
+    water: day.waterGlasses,
+    minutes: st.minutes,
+    logged: day.entries.length > 0,
+    period: !!day.period,
+    ...Object.fromEntries(Object.entries(byCat).map(([k, v]) => [`m_${k}`, v])),
+  };
+}
+export type DayRow = ReturnType<typeof dayRow>;
+
+/** On target = between 80 % and 100 % of the day's budget. */
+export const isOnTarget = (r: DayRow) => r.kcal <= r.budget && r.kcal >= r.budget * 0.8;
+
 export function Charts() {
+  const { t } = useL10n();
+  const [view, setView] = useState<'trends' | 'monthly'>('trends');
+  return (
+    <div className="pt-safe px-4 pb-28">
+      <header className="flex items-center justify-between gap-3 py-2">
+        <h1 className="text-2xl font-bold">{t('charts.title')}</h1>
+        <Segmented
+          className="w-48"
+          value={view}
+          onChange={setView}
+          options={[
+            { value: 'trends', label: t('charts.trends') },
+            { value: 'monthly', label: t('charts.monthly') },
+          ]}
+        />
+      </header>
+      {view === 'trends' ? <RangeCharts /> : <MonthlyOverview />}
+    </div>
+  );
+}
+
+function RangeCharts() {
   const L = useL10n();
   const { t, n } = L;
   const today = todayIso();
@@ -30,37 +84,11 @@ export function Charts() {
   const [start, end] = range === 'custom' ? [from <= to ? from : to, from <= to ? to : from] : [addDays(today, -(Number(range) - 1)), today];
   const dates = useMemo(() => rangeDays(start, end), [start, end]);
   const goal = settings.goal.dailyKcal;
-  const addBack = settings.exercise.addBackToBudget;
-
-  const rows = useMemo(
-    () =>
-      dates.map((d) => {
-        const day: DayLog = allDays[d] ?? { date: d, entries: [], exercises: [], waterGlasses: 0 };
-        const st = dayStats(day, goal, addBack);
-        const budget = goal + (addBack ? st.burned : 0);
-        const byCat: Partial<Record<ExerciseCategoryId, number>> = {};
-        for (const e of day.exercises) byCat[e.category] = (byCat[e.category] ?? 0) + e.minutes;
-        return {
-          date: d,
-          kcal: st.eaten.kcal,
-          burned: st.burned,
-          net: st.eaten.kcal - st.burned,
-          budget,
-          protein: st.eaten.protein,
-          carbs: st.eaten.carbs,
-          fat: st.eaten.fat,
-          water: day.waterGlasses,
-          minutes: st.minutes,
-          logged: day.entries.length > 0,
-          ...Object.fromEntries(Object.entries(byCat).map(([k, v]) => [`m_${k}`, v])),
-        };
-      }),
-    [dates, allDays, goal, addBack],
-  );
+  const rows = useMemo(() => dates.map((d) => dayRow(d, allDays, settings)), [dates, allDays, settings]);
 
   const logged = rows.filter((r) => r.logged);
   const avgKcal = logged.length ? logged.reduce((a, r) => a + r.kcal, 0) / logged.length : 0;
-  const onTarget = logged.filter((r) => r.kcal <= r.budget && r.kcal >= r.budget * 0.8).length;
+  const onTarget = logged.filter(isOnTarget).length;
   const avgProtein = logged.length ? logged.reduce((a, r) => a + r.protein, 0) / logged.length : 0;
   const totals = logged.reduce((a, r) => ({ protein: a.protein + r.protein, carbs: a.carbs + r.carbs, fat: a.fat + r.fat }), { protein: 0, carbs: 0, fat: 0 });
   const split = macroSplit({ kcal: 0, ...totals });
@@ -99,10 +127,7 @@ export function Charts() {
   const barColor = (r: (typeof rows)[number]) => (r.kcal <= r.budget ? 'rgb(var(--accent))' : r.kcal <= r.budget * 1.1 ? 'rgb(var(--warn))' : 'rgb(var(--bad))');
 
   return (
-    <div className="pt-safe px-4 pb-28">
-      <header className="py-2">
-        <h1 className="text-2xl font-bold">{t('charts.title')}</h1>
-      </header>
+    <div>
       <Segmented
         value={range}
         onChange={setRange}
@@ -245,7 +270,7 @@ export function Charts() {
   );
 }
 
-function Summary({ label, value }: { label: string; value: string }) {
+export function Summary({ label, value }: { label: string; value: string }) {
   return (
     <Card className="p-3 text-center">
       <div className="text-[11px] text-ink2">{label}</div>
@@ -254,7 +279,7 @@ function Summary({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ChartCard({ title, children }: { title: string; children: ReactNode }) {
+export function ChartCard({ title, children }: { title: string; children: ReactNode }) {
   return (
     <Card className="mt-3">
       <h3 className="mb-2 font-bold">{title}</h3>

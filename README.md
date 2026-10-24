@@ -15,6 +15,8 @@ It's a Progressive Web App: install it on an iPhone from Safari or as a desktop 
 - **Exercise**: 50 activities with Compendium MET values (power yoga, walking, running, gym, zurkhaneh…), light / moderate / vigorous intensity, net or gross kcal, manual override, distance/steps/heart rate, strength sets × reps × kg, routines, and a weekly plan.
 - **Water** in glasses (configurable size and goal); long-press to remove one.
 - **Weight**: weekly weigh-ins, EWMA trend line, kg/week slope, projected goal date, and an in-app reminder.
+- **Menstrual cycle** (for female profiles, opt-in in Settings): log flow and symptoms on a cycle calendar, see the current phase, the predicted next period and the fertile window, and get the averages learned from your own cycles. An optional luteal-phase goal boost (+150 kcal by default) is available. Weigh-ins that likely include cycle-related water weight are flagged. Predictions are estimates, not medical advice or contraception.
+- **Monthly overview** (Charts → Monthly, following Jalali or Gregorian months): a color-coded calendar heatmap (on target / under / over, with exercise and period marks), monthly totals compared with the previous month, calories for each day, and a 12-month trend of average kcal, average weight and active minutes.
 - **Charts** for 7 / 30 / 90 days or a custom range: calories vs goal, intake vs burned, active minutes by category, weekly burn, exercise breakdown, macros, water and weight.
 - **Goals**: Mifflin–St Jeor TDEE that updates after each weigh-in, a warning when the target drops below a safe floor, and macro targets in grams or percent.
 - **Health score** (0–100) per food with a transparent breakdown.
@@ -50,7 +52,7 @@ Log entries freeze their nutrient values when you log them, so later edits to a 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm test           # 38 unit tests (nutrition, units, TDEE, trend, health score, search, dates, backup round-trip, seed validation)
+npm test           # 47 unit tests (nutrition, units, TDEE, trend, health score, search, dates, backup round-trip, seed validation)
 npm run build      # rebuilds the food seed, type-checks, and writes the PWA to dist/
 ```
 

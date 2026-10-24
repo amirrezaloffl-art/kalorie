@@ -18,6 +18,7 @@ import { SettingsPage } from '../screens/Settings';
 import { Calibrate } from '../screens/Calibrate';
 import { Templates } from '../screens/Templates';
 import { Onboarding } from '../screens/Onboarding';
+import { CyclePage } from '../screens/Cycle';
 
 export function App() {
   const ready = useApp((s) => s.ready);
@@ -71,6 +72,7 @@ function PageView({ page }: { page: Page }) {
     case 'customExercise': return <CustomExercise page={page} />;
     case 'routines': return <Routines page={page} />;
     case 'weight': return <WeightPage />;
+    case 'cycle': return <CyclePage />;
     case 'settings': return <SettingsPage />;
     case 'calibrate': return <Calibrate page={page} />;
     case 'templates': return <Templates page={page} />;

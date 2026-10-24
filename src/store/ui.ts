@@ -15,6 +15,7 @@ export type Page =
   | { kind: 'customExercise'; exerciseId?: string }
   | { kind: 'routines'; date: string }
   | { kind: 'weight' }
+  | { kind: 'cycle' }
   | { kind: 'settings' }
   | { kind: 'calibrate'; foodId?: string }
   | { kind: 'templates'; date: string; mealId: MealId };

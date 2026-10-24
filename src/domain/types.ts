@@ -142,6 +142,18 @@ export interface ExerciseRoutine {
   items: { exerciseId: string; minutes: number; intensity: Intensity }[];
 }
 
+// ---------- Menstrual cycle ----------
+export type PeriodFlow = 'spotting' | 'light' | 'medium' | 'heavy';
+export type CycleSymptom = 'cramps' | 'bloating' | 'cravings' | 'fatigue' | 'headache' | 'mood' | 'acne' | 'tender';
+
+export interface CycleSettings {
+  enabled: boolean;
+  cycleLength: number; // default / fallback until enough cycles are logged
+  periodLength: number;
+  lutealBoost: boolean; // add extra kcal to the goal in the luteal phase
+  lutealKcal: number;
+}
+
 // ---------- Day ----------
 export interface DayLog {
   date: string; // 'YYYY-MM-DD'
@@ -149,6 +161,8 @@ export interface DayLog {
   exercises: ExerciseEntry[];
   waterGlasses: number;
   note?: string;
+  period?: PeriodFlow;
+  symptoms?: CycleSymptom[];
 }
 
 // ---------- Weight ----------
@@ -185,6 +199,7 @@ export interface Settings {
   macros: { mode: 'grams' | 'percent'; proteinG: number; carbsG: number; fatG: number; proteinPct: number; carbsPct: number; fatPct: number };
   water: { glassMl: number; goalGlasses: number };
   exercise: { addBackToBudget: boolean; mode: 'net' | 'gross'; weeklyMinutesGoal: number; plannedWeekdays: number[] };
+  cycle: CycleSettings;
   meals: MealSlot[];
   weighInWeekday: number;
   theme: 'light' | 'dark';

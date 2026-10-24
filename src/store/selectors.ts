@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
 import { caloriesLeft, entriesTotal } from '../domain/nutrition';
 import { macroTargets } from '../domain/tdee';
+import { cycleKcalAdjustment } from '../domain/cycle';
 import { foodIndex, exerciseIndex } from '../search';
 import { emptyDay, useApp } from './app';
 import { addDays, weekOf } from '../utils/dates';
-import type { DayLog } from '../domain/types';
+import type { DayLog, Settings } from '../domain/types';
 
 export function useDay(date: string): DayLog {
   const d = useApp((s) => s.days[date]);
@@ -18,13 +19,19 @@ export function dayStats(day: DayLog, goal: number, addBack: boolean) {
   return { eaten, burned, minutes, left: caloriesLeft(goal, eaten.kcal, burned, addBack) };
 }
 
+/** Daily kcal goal for a date: the base goal plus the optional luteal-phase adjustment. */
+export const goalFor = (date: string, settings: Settings, days: Record<string, DayLog>) =>
+  settings.goal.dailyKcal + (settings.profile.sex === 'female' ? cycleKcalAdjustment(date, days, settings.cycle) : 0);
+
 export function useDayStats(date: string) {
   const day = useDay(date);
   const settings = useApp((s) => s.settings);
+  const days = useApp((s) => s.days);
   return useMemo(() => {
-    const st = dayStats(day, settings.goal.dailyKcal, settings.exercise.addBackToBudget);
-    return { ...st, day, goal: settings.goal.dailyKcal, targets: macroTargets(settings) };
-  }, [day, settings]);
+    const goal = goalFor(date, settings, days);
+    const st = dayStats(day, goal, settings.exercise.addBackToBudget);
+    return { ...st, day, goal, cycleBonus: goal - settings.goal.dailyKcal, targets: macroTargets(settings) };
+  }, [day, settings, days, date]);
 }
 
 /** Active minutes for the week containing `date`. */

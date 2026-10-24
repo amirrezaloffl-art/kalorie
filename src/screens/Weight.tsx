@@ -5,6 +5,7 @@ import { useL10n } from '../i18n';
 import { deleteWeight, saveWeight, useApp } from '../store/app';
 import { toast } from '../store/ui';
 import { ewma, projectGoalDate, weeklySlope, daysSince } from '../domain/trend';
+import { waterRetentionLikely } from '../domain/cycle';
 import { Badge, Button, Card, Field, IconBtn, NumInput, Page, TextInput } from '../components/ui';
 import { todayIso } from '../utils/dates';
 import { uid } from '../utils/id';
@@ -14,6 +15,8 @@ export function WeightPage() {
   const { t, n } = L;
   const weights = useApp((s) => s.weights);
   const target = useApp((s) => s.settings.goal.targetKg);
+  const days = useApp((s) => s.days);
+  const cycleCfg = useApp((s) => (s.settings.profile.sex === 'female' && s.settings.cycle.enabled ? s.settings.cycle : null));
   const last = weights[weights.length - 1];
   const [date, setDate] = useState(todayIso());
   const [kg, setKg] = useState<number | undefined>(last?.kg);
@@ -119,6 +122,7 @@ export function WeightPage() {
             <div className="flex-1">
               <div className="num font-medium">{n(w.kg, 1)} {t('unit.kg')}{w.waistCm ? <span className="text-xs text-ink2"> • {t('weight.waist')} {n(w.waistCm)}</span> : null}</div>
               <div className="text-xs text-ink2">{L.date(w.date, 'dddd D MMMM YYYY')}{w.note ? ` • ${w.note}` : ''}</div>
+              {cycleCfg && waterRetentionLikely(w.date, days, cycleCfg) && <div className="text-[11px] text-water">{t('cycle.waterNote')}</div>}
             </div>
             <IconBtn label="delete" onClick={() => confirm(t('weight.confirmDelete')) && deleteWeight(w.id)}><Trash2 size={16} /></IconBtn>
           </div>
